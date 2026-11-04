@@ -1,5 +1,5 @@
 
-function Topbar({ activePage, applicationCount, topicCount }) {
+function Topbar({ activePage, applicationCount, topicCount, children }) {
   const pageDetails = {
     interviews: {
       eyebrow: "YOUR CAREER JOURNEY",
@@ -22,6 +22,8 @@ function Topbar({ activePage, applicationCount, topicCount }) {
         <h2>{currentPage.title}</h2>
         <p>{currentPage.description}</p>
       </div>
+
+      {children}
 
       <div className="topbar-actions">
         <div className="quick-stat">

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import PixelPlant from "./components/PixelPlant";
+import WeatherSlider from "./components/WeatherSlider";
 import WindowVines from "./components/WindowVines";
 
 import {
@@ -66,25 +67,6 @@ function App() {
         onNavigate={setActivePage}
       />
 
-      <section className="welcome-banner">
-        <div>
-          <span className="welcome-eyebrow">
-            YOUR LITTLE CORNER OF THE WORLD
-          </span>
-
-          <h3>
-            One step at a time.
-            <br />
-            <span>You've got this.</span>
-          </h3>
-
-          <p>
-            Keep track of where you've been
-            and where you're headed.
-          </p>
-        </div>
-      </section>
-
       <main className="window-frame">
         <WindowVines />
         <div className="window-wood">
@@ -94,45 +76,12 @@ function App() {
                 activePage={activePage}
                 applicationCount={applicationCount}
                 topicCount={topicCount}
-              />
+              >
+                <WeatherSlider value={weatherMode} onChange={setWeatherMode} />
+              </Topbar>
             </div>
 
             <div className="window-content">
-              <div className="window-weather">
-                <div className="weather-description">
-                  <span className="weather-icon" aria-hidden="true">
-                    {weatherMode === "sunlit" ? "☀" : weatherMode === "dusk" ? "☾" : "☁"}
-                  </span>
-                  <span className="weather-text">
-                    {weatherMode === "sunlit"
-                      ? "A warm little patch of sunshine"
-                      : weatherMode === "dusk"
-                        ? "Evening light, gentle progress"
-                        : "A little rain, a lot of growth"}
-                  </span>
-                  <span className="weather-sparkle" aria-hidden="true"></span>
-                </div>
-
-                <div className="weather-controls" role="group" aria-label="Weather and window lighting">
-                  {[
-                    { mode: "cloudy", label: "Cloudy" },
-                    { mode: "sunlit", label: "Sunlit day" },
-                    { mode: "dusk", label: "Dusk" },
-                  ].map(({ mode, label }) => (
-                    <button
-                      key={mode}
-                      type="button"
-                      className={weatherMode === mode ? "selected" : ""}
-                      onClick={() => setWeatherMode(mode)}
-                      aria-pressed={weatherMode === mode}
-                    >
-                      {label}
-                    </button>
-                  ))}
-
-                </div>
-              </div>
-
               {loading && (
                 <div className="status-message">
                   Gathering your little victories...
@@ -249,7 +198,6 @@ function App() {
 
             <div className="window-sill">
               <PixelPlant variant="broad" className="sill-plant sill-plant-left" />
-              <div className="sill-decoration">✿</div>
               <PixelPlant variant="trailing" className="sill-plant sill-plant-right" />
             </div>
           </div>
