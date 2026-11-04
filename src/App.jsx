@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import PixelPlant from "./components/PixelPlant";
+import WindowVines from "./components/WindowVines";
 
 import {
   getApplications,
@@ -19,7 +20,7 @@ function App() {
   const [applications, setApplications] = useState([]);
   const [topics, setTopics] = useState([]);
   const [learningProgress, setLearningProgress] = useState([]);
-  const [centreMode, setCentreMode] = useState("translucent");
+  const [weatherMode, setWeatherMode] = useState("cloudy");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -65,9 +66,29 @@ function App() {
         onNavigate={setActivePage}
       />
 
+      <section className="welcome-banner">
+        <div>
+          <span className="welcome-eyebrow">
+            YOUR LITTLE CORNER OF THE WORLD
+          </span>
+
+          <h3>
+            One step at a time.
+            <br />
+            <span>You've got this.</span>
+          </h3>
+
+          <p>
+            Keep track of where you've been
+            and where you're headed.
+          </p>
+        </div>
+      </section>
+
       <main className="window-frame">
+        <WindowVines />
         <div className="window-wood">
-          <div className={`window-inner centre-${centreMode}`}>
+          <div className={`window-inner weather-${weatherMode}`}>
             <div className="window-header">
               <Topbar
                 activePage={activePage}
@@ -79,46 +100,36 @@ function App() {
             <div className="window-content">
               <div className="window-weather">
                 <div className="weather-description">
-                  <span className="weather-moon" aria-hidden="true">☾</span>
+                  <span className="weather-icon" aria-hidden="true">
+                    {weatherMode === "sunlit" ? "☀" : weatherMode === "dusk" ? "☾" : "☁"}
+                  </span>
                   <span className="weather-text">
-                    A little rain, a lot of growth
+                    {weatherMode === "sunlit"
+                      ? "A warm little patch of sunshine"
+                      : weatherMode === "dusk"
+                        ? "Evening light, gentle progress"
+                        : "A little rain, a lot of growth"}
                   </span>
                   <span className="weather-sparkle" aria-hidden="true"></span>
                 </div>
 
-                <div className="centre-controls" aria-label="Window transparency">
-                  <span>Window</span>
-
-                  {["opaque", "translucent", "transparent"].map((mode) => (
+                <div className="weather-controls" role="group" aria-label="Weather and window lighting">
+                  {[
+                    { mode: "cloudy", label: "Cloudy" },
+                    { mode: "sunlit", label: "Sunlit day" },
+                    { mode: "dusk", label: "Dusk" },
+                  ].map(({ mode, label }) => (
                     <button
                       key={mode}
                       type="button"
-                      className={centreMode === mode ? "selected" : ""}
-                      onClick={() => setCentreMode(mode)}
-                      aria-pressed={centreMode === mode}
+                      className={weatherMode === mode ? "selected" : ""}
+                      onClick={() => setWeatherMode(mode)}
+                      aria-pressed={weatherMode === mode}
                     >
-                      {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                      {label}
                     </button>
                   ))}
-                </div>
-              </div>
 
-              <div className="welcome-banner">
-                <div>
-                  <span className="welcome-eyebrow">
-                    YOUR LITTLE CORNER OF THE WORLD
-                  </span>
-
-                  <h3>
-                    One step at a time.
-                    <br />
-                    <span>You've got this.</span>
-                  </h3>
-
-                  <p>
-                    Keep track of where you've been
-                    and where you're headed.
-                  </p>
                 </div>
               </div>
 
