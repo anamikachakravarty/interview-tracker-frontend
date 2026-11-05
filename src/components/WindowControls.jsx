@@ -18,16 +18,17 @@ function getOpeningLabel(value) {
   return "Wide open";
 }
 
-function SceneSlider({ label, value, onChange, minLabel, maxLabel, valueLabel, icon }) {
+function SceneSlider({ id, label, value, onChange, minLabel, maxLabel, valueLabel, icon }) {
   return (
     <div className="scene-control">
       <div className="scene-control-heading">
         <span className="scene-control-icon" aria-hidden="true">{icon}</span>
-        <label>{label}</label>
-        <output>{valueLabel}</output>
+        <label htmlFor={id}>{label}</label>
+        <output htmlFor={id}>{valueLabel}</output>
       </div>
 
       <input
+        id={id}
         className="scene-range"
         type="range"
         min="0"
@@ -58,6 +59,7 @@ export default function WindowControls({
   return (
     <section className="scene-controls" aria-label="Window and sky controls">
       <SceneSlider
+        id="window-opening-control"
         label="Open the window"
         icon="▱"
         value={opening}
@@ -68,6 +70,7 @@ export default function WindowControls({
       />
 
       <SceneSlider
+        id="time-of-day-control"
         label="Time of day"
         icon={timeOfDay > 68 ? "☾" : timeOfDay > 52 ? "◒" : "☀"}
         value={timeOfDay}
@@ -78,6 +81,7 @@ export default function WindowControls({
       />
 
       <SceneSlider
+        id="sky-weather-control"
         label="Sky & weather"
         icon={weather > 68 ? "☂" : weather > 28 ? "☁" : "☀"}
         value={weather}
