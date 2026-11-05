@@ -152,7 +152,7 @@
 .pixel-cloud .cloud-body {
   position: absolute;
   display: block;
-  background: #d8e0dc;
+  background: color-mix(in srgb, #d8e0dc calc((1 - var(--night-level, 0)) * 100%), #75809a calc(var(--night-level, 0) * 100%));
 }
 
 .pixel-cloud .cloud-cap {
