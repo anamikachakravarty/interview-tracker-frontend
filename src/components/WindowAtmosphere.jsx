@@ -25,6 +25,7 @@ export default function WindowAtmosphere() {
   return (
     <div className="window-atmosphere" aria-hidden="true">
       <div className="sky-glow" />
+      <div className="overcast-wash" />
       <div className="pixel-sun" />
       <div className="pixel-moon" />
 
