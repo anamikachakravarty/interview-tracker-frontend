@@ -72,6 +72,7 @@ function getSceneStyle(opening, timeOfDay, weather) {
     "--night-level": time.night.toFixed(3),
     "--window-opening": opening,
     "--window-opening-angle": `${(opening / 100) * 78}deg`,
+    "--window-opening-left-angle": `-${(opening / 100) * 78}deg`,
     "--window-glass-opacity": (0.18 - (opening / 100) * 0.09).toFixed(3),
   };
 }
