@@ -5,6 +5,7 @@ import Topbar from "./components/Topbar";
 import PixelPlant from "./components/PixelPlant";
 import WindowControls from "./components/WindowControls";
 import WindowAtmosphere from "./components/WindowAtmosphere";
+import WindowVines from "./components/WindowVines";
 
 import {
   getApplications,
