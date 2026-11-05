@@ -1,0 +1,526 @@
+/* ==========================================================
+   WINDOW ATMOSPHERE CONTROLS
+   These styles layer over the existing Rainy-window artwork.
+   The source artwork, room scene, plants and dashboard remain.
+========================================================== */
+
+/* Time-of-day lighting also tints the wooden frame itself. */
+.window-frame {
+  border-color: color-mix(in srgb, #5d4935 calc((1 - var(--night-level, 0)) * 100%), #343c5b calc(var(--night-level, 0) * 100%));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, #a98761 calc((1 - var(--night-level, 0)) * 100%), #58617c calc(var(--night-level, 0) * 100%)),
+    color-mix(in srgb, #75583e calc((1 - var(--night-level, 0)) * 100%), #303b5a calc(var(--night-level, 0) * 100%)) 48%,
+    color-mix(in srgb, #9a7651 calc((1 - var(--night-level, 0)) * 100%), #68708a calc(var(--night-level, 0) * 100%))
+  );
+  transition: background 500ms ease, border-color 500ms ease;
+}
+
+.window-wood {
+  background: color-mix(in srgb, #d0ad7e calc((1 - var(--night-level, 0)) * 100%), #59627c calc(var(--night-level, 0) * 100%));
+  border-color: color-mix(in srgb, #634b34 calc((1 - var(--night-level, 0)) * 100%), #303b59 calc(var(--night-level, 0) * 100%));
+  transition: background 500ms ease, border-color 500ms ease;
+}
+
+.window-inner {
+  --image-overlay: 0.08;
+  --image-overlay-color: 255, 239, 205;
+  --panel-opacity: 0.82;
+  --content-opacity: 0.28;
+  border-color: color-mix(in srgb, #806447 calc((1 - var(--night-level, 0)) * 100%), #485274 calc(var(--night-level, 0) * 100%));
+  transition: border-color 500ms ease;
+}
+
+.window-inner::before {
+  transition: background 500ms ease;
+}
+
+/* Keep the existing muntins, but let the new animated layer sit beneath UI. */
+.window-inner::after {
+  opacity: 0.52;
+  transition: opacity 300ms ease;
+}
+
+.window-inner > .window-atmosphere {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Sky overlays: the tint changes continuously from dawn to night. */
+.window-atmosphere .sky-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(var(--time-tint, 255, 230, 180), var(--time-tint-opacity, 0.1));
+  transition: background-color 450ms ease;
+}
+
+.window-atmosphere .overcast-wash {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(61, 75, 91, 0.45), rgba(81, 91, 101, 0.04) 65%, transparent);
+  opacity: calc(var(--cloud-opacity, 0) * 0.68);
+  transition: opacity 350ms ease;
+}
+
+.pixel-sun,
+.pixel-moon {
+  position: absolute;
+  z-index: 2;
+  top: 13%;
+  right: 17%;
+  width: 34px;
+  height: 34px;
+  image-rendering: pixelated;
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+
+.pixel-sun {
+  background: #ffdf83;
+  box-shadow:
+    0 -9px 0 -5px #ffedb1,
+    0 9px 0 -5px #f3bd65,
+    -9px 0 0 -5px #f3bd65,
+    9px 0 0 -5px #f3bd65,
+    0 0 0 3px rgba(255, 226, 149, 0.22);
+  opacity: var(--sun-opacity, 0);
+}
+
+.pixel-moon {
+  width: 31px;
+  height: 31px;
+  border-radius: 50%;
+  background: #f6edc9;
+  box-shadow: 0 0 0 4px rgba(246, 237, 201, 0.12), 0 0 23px rgba(246, 237, 201, 0.35);
+  opacity: var(--moon-opacity, 0);
+}
+
+.pixel-moon::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 10px;
+  width: 29px;
+  height: 29px;
+  border-radius: 50%;
+  background: color-mix(in srgb, #21304d 72%, transparent);
+}
+
+.star-field {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  opacity: var(--star-opacity, 0);
+  transition: opacity 500ms ease;
+}
+
+.pixel-star {
+  position: absolute;
+  display: block;
+  background: #fff4c8;
+  box-shadow: 0 0 5px 1px rgba(255, 239, 181, 0.62);
+  animation: star-twinkle 2.6s steps(2, end) infinite;
+}
+
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.35; transform: scale(0.75); }
+  50% { opacity: 1; transform: scale(1.35); }
+}
+
+/* Soft blocky clouds drift at different speeds. */
+.cloud-field {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  opacity: var(--cloud-opacity, 0);
+  transition: opacity 400ms ease;
+}
+
+.pixel-cloud {
+  position: absolute;
+  width: 118px;
+  height: 34px;
+  opacity: 0.78;
+  filter: drop-shadow(0 3px 0 rgba(69, 82, 91, 0.12));
+}
+
+.pixel-cloud .cloud-cap,
+.pixel-cloud .cloud-body {
+  position: absolute;
+  display: block;
+  background: color-mix(in srgb, #d8e0dc calc((1 - var(--night-level, 0)) * 100%), #75809a calc(var(--night-level, 0) * 100%));
+}
+
+.pixel-cloud .cloud-cap {
+  left: 25px;
+  top: 0;
+  width: 42px;
+  height: 18px;
+  box-shadow: 21px 8px 0 #d8e0dc, -12px 12px 0 #d8e0dc;
+}
+
+.pixel-cloud .cloud-body {
+  left: 7px;
+  top: 15px;
+  width: 105px;
+  height: 16px;
+  box-shadow: 8px 8px 0 -3px #bfcac8;
+}
+
+.cloud-one { top: 19%; left: 12%; animation: cloud-drift 48s linear infinite; }
+.cloud-two { top: 33%; left: 70%; transform: scale(0.72); animation: cloud-drift-reverse 58s linear infinite; }
+.cloud-three { top: 8%; left: 48%; transform: scale(0.58); animation: cloud-drift 66s linear infinite; }
+.cloud-four { top: 48%; left: 4%; transform: scale(0.46); animation: cloud-drift-reverse 72s linear infinite; }
+
+@keyframes cloud-drift {
+  from { translate: -35px 0; }
+  to { translate: 120px 0; }
+}
+
+@keyframes cloud-drift-reverse {
+  from { translate: 90px 0; }
+  to { translate: -90px 0; }
+}
+
+/* Birds appear only in brighter, clearer parts of the time/weather range. */
+.bird-flock {
+  position: absolute;
+  z-index: 4;
+  width: 78px;
+  height: 32px;
+  fill: none;
+  stroke: #4b5147;
+  stroke-width: 2.5;
+  stroke-linecap: square;
+  opacity: var(--bird-opacity, 0);
+  animation: birds-cross-sky 21s linear infinite;
+  transition: opacity 350ms ease;
+}
+
+.bird-flock-one { top: 28%; left: -110px; }
+.bird-two { opacity: 0.75; }
+.bird-three { opacity: 0.55; }
+
+@keyframes birds-cross-sky {
+  0% { transform: translateX(-15px) translateY(3px); }
+  48% { transform: translateX(65vw) translateY(-7px); }
+  100% { transform: translateX(125vw) translateY(4px); }
+}
+
+/* Rain grows in gradually as the sky approaches full overcast. */
+.rain-layer {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  overflow: hidden;
+  opacity: var(--rain-opacity, 0);
+  transition: opacity 500ms ease;
+}
+
+.rain-drop {
+  position: absolute;
+  top: -22px;
+  width: 2px;
+  background: rgba(211, 229, 237, 0.82);
+  box-shadow: 1px 0 0 rgba(116, 161, 184, 0.28);
+  animation-name: rain-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes rain-fall {
+  from { transform: translate3d(0, -15px, 0); }
+  to { transform: translate3d(-18px, 760px, 0); }
+}
+
+/* Rare flashes, with a brief second flicker. */
+.lightning-flash {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  opacity: 0;
+  background: rgba(224, 238, 255, 0.74);
+  mix-blend-mode: screen;
+  animation: lightning-strike 11s steps(1, end) infinite;
+}
+
+.lightning-bolt {
+  position: absolute;
+  top: 10%;
+  right: 29%;
+  width: 24px;
+  height: 88px;
+  background: #f9fbff;
+  clip-path: polygon(48% 0, 100% 0, 61% 39%, 88% 39%, 20% 100%, 39% 53%, 8% 53%);
+  filter: drop-shadow(0 0 8px #fff);
+}
+
+@keyframes lightning-strike {
+  0%, 88%, 90%, 92%, 100% { opacity: 0; }
+  89% { opacity: var(--storm-opacity, 0); }
+  91% { opacity: calc(var(--storm-opacity, 0) * 0.65); }
+}
+
+/* Opening the window swings two glazed sashes away from the view. */
+.window-sashes {
+  position: absolute;
+  z-index: 7;
+  inset: 0;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.window-sash {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 22%;
+  border: 5px solid rgba(89, 67, 48, 0.82);
+  background:
+    linear-gradient(90deg, rgba(225, 239, 232, var(--window-glass-opacity, 0.18)), rgba(183, 216, 224, 0.06)),
+    repeating-linear-gradient(0deg, transparent 0 33%, rgba(91, 67, 47, 0.55) 33% 34.5%, transparent 34.5% 66%, rgba(91, 67, 47, 0.55) 66% 67.5%, transparent 67.5%);
+  box-shadow: inset 0 0 0 2px rgba(255, 238, 204, 0.32), 0 0 10px rgba(32, 35, 31, 0.12);
+  backface-visibility: visible;
+  transition: transform 120ms linear, background 350ms ease;
+}
+
+.window-sash-left {
+  left: 0;
+  transform-origin: left center;
+  transform: rotateY(calc(var(--window-opening, 0) * -0.78deg));
+  border-left: 0;
+}
+
+.window-sash-right {
+  right: 0;
+  transform-origin: right center;
+  transform: rotateY(calc(var(--window-opening, 0) * 0.78deg));
+  border-right: 0;
+}
+
+.window-sash::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 5px;
+  transform: translateX(-50%);
+  background: rgba(91, 67, 47, 0.62);
+  box-shadow: 2px 0 0 rgba(238, 209, 160, 0.38);
+}
+
+/* The artwork and effects remain behind the tracker controls. */
+.window-inner > .window-header,
+.window-inner > .scene-controls-dock,
+.window-inner > .window-content,
+.window-inner > .window-sill {
+  position: relative;
+  z-index: 8;
+}
+
+/* The three controls sit in one calm, compact strip below the page heading. */
+.scene-controls-dock {
+  padding: 10px clamp(14px, 3vw, 34px) 11px;
+  background: rgba(235, 231, 207, 0.88);
+  border-top: 1px solid rgba(139, 119, 83, 0.30);
+  border-bottom: 2px solid rgba(139, 119, 83, 0.42);
+  backdrop-filter: blur(5px);
+}
+
+.scene-controls {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 28px);
+  width: min(100%, 1050px);
+  margin: 0 auto;
+}
+
+.scene-control {
+  min-width: 0;
+}
+
+.scene-control-heading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  margin-bottom: 3px;
+  color: #475d42;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.scene-control-icon {
+  flex: 0 0 auto;
+  color: #947044;
+  font-size: 15px;
+}
+
+.scene-control-heading label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.scene-control-heading output {
+  margin-left: auto;
+  color: #887257;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.scene-range {
+  display: block;
+  width: 100%;
+  height: 17px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #71875f;
+  appearance: none;
+  background: transparent;
+}
+
+.scene-range::-webkit-slider-runnable-track {
+  height: 5px;
+  border: 1px solid #786044;
+  background: linear-gradient(90deg, #a8b995, #d8be8b, #a4a8b1);
+  border-radius: 2px;
+}
+
+.scene-range::-moz-range-track {
+  height: 5px;
+  border: 1px solid #786044;
+  background: linear-gradient(90deg, #a8b995, #d8be8b, #a4a8b1);
+  border-radius: 2px;
+}
+
+.scene-range::-webkit-slider-thumb {
+  width: 15px;
+  height: 15px;
+  margin-top: -6px;
+  border: 2px solid #604a35;
+  border-radius: 2px;
+  background: #f5e2b9;
+  box-shadow: 1px 2px 0 rgba(52, 41, 29, 0.28);
+  appearance: none;
+}
+
+.scene-range::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border: 2px solid #604a35;
+  border-radius: 2px;
+  background: #f5e2b9;
+  box-shadow: 1px 2px 0 rgba(52, 41, 29, 0.28);
+}
+
+.scene-range:focus-visible {
+  outline: 2px dashed #8d563e;
+  outline-offset: 3px;
+}
+
+.scene-control-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -1px;
+  color: #877a65;
+  font-size: 9px;
+}
+
+/* A gentler, narrower page header: controls have their own row now. */
+.window-header {
+  padding: 21px clamp(20px, 3vw, 35px) 18px;
+  background: rgba(var(--panel-color, 247, 241, 222), 0.84);
+  backdrop-filter: blur(5px);
+}
+
+.window-content {
+  background: rgba(var(--panel-color, 246, 241, 220), 0.34);
+  backdrop-filter: blur(2px);
+}
+
+/* Nightfall gently cools the room-facing paper without harming readability. */
+.window-inner {
+  --night-paper: 0;
+}
+
+.window-inner .window-header,
+.window-inner .scene-controls-dock {
+  transition: background-color 450ms ease, border-color 450ms ease;
+}
+
+.window-inner .window-header {
+  background: color-mix(in srgb, rgba(246, 241, 222, 0.90) calc((1 - var(--night-level, 0)) * 100%), rgba(60, 69, 96, 0.90) calc(var(--night-level, 0) * 100%));
+}
+
+.window-inner .scene-controls-dock {
+  background: color-mix(in srgb, rgba(235, 231, 207, 0.92) calc((1 - var(--night-level, 0)) * 100%), rgba(62, 72, 101, 0.92) calc(var(--night-level, 0) * 100%));
+}
+
+.window-inner .scene-control-heading,
+.window-inner .scene-control-heading output,
+.window-inner .scene-control-scale {
+  color: color-mix(in srgb, #475d42 calc((1 - var(--night-level, 0)) * 100%), #f0e8d2 calc(var(--night-level, 0) * 100%));
+}
+
+.window-inner .scene-control-icon {
+  color: color-mix(in srgb, #947044 calc((1 - var(--night-level, 0)) * 100%), #e7c98d calc(var(--night-level, 0) * 100%));
+}
+
+/* Small screens: retain all three controls without squeezing their labels. */
+@media (max-width: 900px) {
+  .scene-controls {
+    gap: 12px;
+  }
+
+  .scene-control-heading {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 650px) {
+  .scene-controls {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .scene-control-heading {
+    flex-wrap: nowrap;
+  }
+
+  .scene-control-scale {
+    margin-top: -2px;
+  }
+
+  .window-sashes {
+    display: none;
+  }
+
+  .pixel-sun,
+  .pixel-moon {
+    top: 9%;
+    right: 12%;
+    transform: scale(0.78);
+  }
+
+  .bird-flock {
+    width: 58px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-star,
+  .pixel-cloud,
+  .bird-flock,
+  .rain-drop,
+  .lightning-flash {
+    animation: none !important;
+  }
+}
